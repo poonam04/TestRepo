@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="row">
+    <div class="form-group row">
+        @Html.Label("Image", new { @class = "col-sm-2 form-control-label" })
+        <div class="col-sm-10">
+            <div id="divImgId">
+                <img class="image-thumb" alt="" src="@ViewBag.ImageUrl" height="100" width="100">
+                <label id="tags"></label>
+            </div>
+            <div class="input-group input-large">
+                <div class="form-control uneditable-input input-fixed input-medium" data-trigger="fileinput" id="txtfileUploadinput">&nbsp;</div>
+                <label class="input-group-addon btn btn-file">
+                    <span class="fileinput-new">Browse</span>
+                    <input type="file" accept=".jpg,.png,.jpeg" id="PostImage" name="PostImage" multiple="">
+                </label>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+<script type="text/javascript">
+    $(".image-thumb").val();
+    
+    $("#PostImage").change(function () {
+        var val = $(this).val();
+
+        switch (val.substring(val.lastIndexOf('.') + 1).toLowerCase()) {
+            case "bmp": case "gif":
+            case "jpe": case "jpeg":
+            case "jpg": case "png":
+            case "tif": case "tiff":
+                readURL(this);
+                break;
+            default:
+                $(this).val('');
+                alert("Please select image only");
+                break;
+        }
+    });
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            $("#txtfileUploadinput").html(input.files[0].name);
+            reader.onload = function (e) {
+                $("#divImgId").show();
+                $('.image-thumb').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+
+            var fileData = new FormData();
+            fileData.append("Image", input.files[0]);
+            debugger;
+            $.ajax({
+                url: '/Home/Index',
+                type: "POST",
+                contentType: false, // Not to set any content header  
+                processData: false, // Not to process data  
+                data: fileData,
+                success: function (result) {
+                    console.log(result);
+                    $('#tags').text(result);
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+        } else {
+            alert("FormData is not supported.");
+        }
+    }
+    </script>
+    }
