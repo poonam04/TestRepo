@@ -44,6 +44,23 @@ namespace WebApi.Controllers
         }
 
 
+        [Route("~/api/v1/user/imagedata")]
+        public HttpResponseMessage GetImage(string requestText)
+        {
+            IUserData _repository = new UserData();
+            var imageList = _repository.GetImageData();
+            if (imageList.Succeeded == true)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, imageList.Data);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "error occured");
+            }
+
+
+        }
+
         [Route("~/api/v1/user/postuserimage")]
         [AllowAnonymous]
         public HttpResponseMessage PostUserImage()

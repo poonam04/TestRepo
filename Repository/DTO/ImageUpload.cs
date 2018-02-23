@@ -51,7 +51,7 @@ namespace WebApi.Models
         public string format { get; set; }
     }
 
-    public class RootObject
+    public class ImageUploadObject
     {
         public List<Category> categories { get; set; }
         public List<Tag> tags { get; set; }
@@ -62,7 +62,7 @@ namespace WebApi.Models
     }
     public class ImageUploadRequest
     {
-        public RootObject rootObject { get; set; }
+        public ImageUploadObject rootObject { get; set; }
         public byte[] imageByte { get; set; }
         public string imageName { get; set; }
         public List<string> tag { get; set; }

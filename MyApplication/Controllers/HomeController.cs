@@ -37,11 +37,11 @@ namespace MyApplication.Controllers
 
 
             //var parsedResponse = JsonPrettyPrint(response);
-            var parsedResponse = FromJSON<WebApi.Models.RootObject>(response);
+            var parsedResponse = FromJSON<ImageUploadObject>(response);
             var tags = parsedResponse.tags.Where(x => x.confidence > 0.90).Select(x => x.name).ToList();
 
            
-            var rootData = JsonConvert.DeserializeObject<WebApi.Models.RootObject>(response);
+            var rootData = JsonConvert.DeserializeObject<ImageUploadObject>(response);
             ImageUploadRequest uploadData = new ImageUploadRequest();
             uploadData.rootObject = rootData;
             uploadData.imageName = DateTime.Now.ToString("yyyyMMddHHmmss")+"."+ extension;
