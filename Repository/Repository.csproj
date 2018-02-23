@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Repository</RootNamespace>
     <AssemblyName>Repository</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,6 +37,10 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\TestProject\TestRepo\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -47,19 +52,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Concrete\UserData.cs" />
     <Compile Include="Configuration\DbConfiguration.cs" />
+    <Compile Include="DTO\APIResponse.cs" />
+    <Compile Include="DTO\ImageDataResponse.cs" />
+    <Compile Include="DTO\ImageUpload.cs" />
     <Compile Include="Entities\ApplicationDbContext.cs" />
     <Compile Include="Entities\UsersDataEntity.cs" />
-    <Compile Include="Migrations\201802221229325_AddUser.cs" />
-    <Compile Include="Migrations\201802221229325_AddUser.Designer.cs">
-      <DependentUpon>201802221229325_AddUser.cs</DependentUpon>
+    <Compile Include="Factories\IUserData.cs" />
+    <Compile Include="Migrations\201802230339265_1.0.cs" />
+    <Compile Include="Migrations\201802230339265_1.0.Designer.cs">
+      <DependentUpon>201802230339265_1.0.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Concrete\" />
-    <Folder Include="Factories\" />
     <Folder Include="Providers\" />
   </ItemGroup>
   <ItemGroup>
@@ -67,8 +75,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201802221229325_AddUser.resx">
-      <DependentUpon>201802221229325_AddUser.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201802230339265_1.0.resx">
+      <DependentUpon>201802230339265_1.0.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

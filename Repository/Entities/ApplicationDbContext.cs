@@ -19,8 +19,8 @@ namespace Repository.Entities
         }
 
         public virtual DbSet<UsersDataEntity> UsersData { get; set; }
-
-
+        public virtual DbSet<ImageDataEntity> ImageData { get; set; }
+        public virtual DbSet<ImageTagEntity>  ImageTag { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

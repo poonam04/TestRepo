@@ -1,8 +1,10 @@
 ﻿using MyApplication.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.Serialization.Json;
@@ -10,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using WebApi.Models;
 using WebGrease.Css.Extensions;
 
 
@@ -34,16 +37,54 @@ namespace MyApplication.Controllers
 
 
             //var parsedResponse = JsonPrettyPrint(response);
-            var parsedResponse = FromJSON<RootObject>(response);
-            var tags = parsedResponse.tags.Where(x => x.confidence > 0.90).Select(x=>x.name).ToList();
+            var parsedResponse = FromJSON<WebApi.Models.RootObject>(response);
+            var tags = parsedResponse.tags.Where(x => x.confidence > 0.90).Select(x => x.name).ToList();
 
-            // return Content(JsonPrettyPrint(response));
-            return Json(tags, JsonRequestBehavior.AllowGet);
+           
+            var rootData = JsonConvert.DeserializeObject<WebApi.Models.RootObject>(response);
+            ImageUploadRequest uploadData = new ImageUploadRequest();
+            uploadData.rootObject = rootData;
+            uploadData.imageName = DateTime.Now.ToString("yyyyMMddHHmmss")+"."+ extension;
+            uploadData.tag = tags;
+           
+
+            HttpPostedFileBase file = Request.Files[0] as HttpPostedFileBase;
+            file.InputStream.Position = 0;
+            int fileSizeInBytes = file.ContentLength;
+            MemoryStream target = new MemoryStream();
+            file.InputStream.CopyTo(target);
+            byte[] data = target.ToArray();
+
+            uploadData.imageByte = data;
+            string serializedData = JsonConvert.SerializeObject(uploadData);
+            HttpResponseMessage responseData = PostJsonRequest("http://localhost:6364/api/v1/admin/updateuserimage", serializedData, null);
+            string resultprofile = responseData.Content.ReadAsStringAsync().Result;
+            if (responseData.StatusCode == HttpStatusCode.OK)
+            {
+                return Json(tags, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+                // return Content(JsonPrettyPrint(response));
+               // return Json(tags, JsonRequestBehavior.AllowGet);
             // return View();
             //postedFile.InputStream
 
         }
 
+        private static HttpResponseMessage PostJsonRequest(string route, string contentBody, string token)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+              
+                if (!string.IsNullOrWhiteSpace(token))
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                var content = new StringContent(contentBody.ToString(), Encoding.UTF8, "application/json");
+                return client.PostAsync(route, content).Result;
+            }
+        }
         public async Task<string> MakeAnalysisRequest(HttpPostedFileBase Image)
         {
             HttpClient client = new HttpClient();
